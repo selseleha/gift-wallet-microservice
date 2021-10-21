@@ -1,0 +1,29 @@
+syntax = "proto3";
+package wallet;
+option go_package = "proto/src";
+
+message GetWalletRequest{
+  string phoneNumber = 1;
+}
+
+message GetWalletResponse{
+  int32 id = 1;
+  string phoneNumber = 2;
+  int32 amount = 3;
+}
+
+message UpdateWalletRequest{
+  string phoneNumber = 1;
+  int32 amount = 2;
+  int32 operationType = 3;
+}
+
+message UpdateWalletResponse{
+  string transactionId = 1;
+  int32 LastAmount = 2;
+}
+
+service WalletService {
+  rpc GetWallet(GetWalletRequest) returns (GetWalletResponse);
+  rpc UpdateWallet(UpdateWalletRequest) returns (UpdateWalletResponse);
+}
