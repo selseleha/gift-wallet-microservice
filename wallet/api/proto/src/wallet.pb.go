@@ -407,7 +407,7 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// WalletServiceClient is the client API for WalletService service.
+// WalletServiceClient is the client API for WalletService internal.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type WalletServiceClient interface {
@@ -441,7 +441,7 @@ func (c *walletServiceClient) UpdateWallet(ctx context.Context, in *UpdateWallet
 	return out, nil
 }
 
-// WalletServiceServer is the server API for WalletService service.
+// WalletServiceServer is the server API for WalletService internal.
 type WalletServiceServer interface {
 	GetWallet(context.Context, *GetWalletRequest) (*GetWalletResponse, error)
 	UpdateWallet(context.Context, *UpdateWalletRequest) (*UpdateWalletResponse, error)
