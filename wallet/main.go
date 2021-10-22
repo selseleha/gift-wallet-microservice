@@ -7,7 +7,7 @@ import (
 	"task/pkg"
 	"task/pkg/models"
 	"task/pkg/repositories"
-	"task/wallet/api/proto"
+	"task/wallet/api"
 	"task/wallet/api/proto/src"
 	"task/wallet/internal"
 )
@@ -34,7 +34,7 @@ func main() {
 	log.Printf("Listening on %s", path)
 	grpcServer := grpc.NewServer()
 	walletService := internal.NewWalletService(walletRepo)
-	handler := proto.NewWalletHandlerImpl(walletService)
+	handler := api.NewWalletHandlerImpl(walletService)
 	src.RegisterWalletServiceServer(grpcServer, handler)
 	grpcServer.Serve(lis)
 }

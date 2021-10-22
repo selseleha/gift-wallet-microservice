@@ -1,0 +1,20 @@
+syntax = "proto3";
+package gift;
+option go_package = "proto/src";
+
+message GetGiftRequest{
+  string phoneNumber = 1;
+  string code = 2;
+}
+
+message GetGiftResponse{
+  int32 giftId = 1;
+  string transactionId = 2;
+  int32 amount = 3;
+}
+
+
+
+service GiftService {
+  rpc GetGift(GetGiftRequest) returns (GetGiftResponse);
+}

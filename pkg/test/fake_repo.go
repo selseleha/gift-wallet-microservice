@@ -7,9 +7,10 @@ import (
 )
 
 type FakeRepo struct {
-	wallets []models.Wallet
-
+	wallets     []models.Wallet
+	gifts       []models.Gift
 	walletIndex int32
+	giftIndex   int32
 }
 
 func (r *FakeRepo) GetWalletByPhoneNumber(phoneNumber string) (*models.Wallet, error) {
@@ -57,9 +58,15 @@ func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType 
 	return errors.New("wallet not found")
 }
 
+func (r *FakeRepo) GetGift(phoneNumber string, code string) (*models.Gift, error) {
+	panic("impl me")
+}
+
 func NewFakeRepo() *FakeRepo {
 	return &FakeRepo{
 		wallets:     nil,
+		gifts:       nil,
 		walletIndex: 0,
+		giftIndex:   0,
 	}
 }

@@ -1,4 +1,4 @@
-package proto
+package api
 
 import (
 	"golang.org/x/net/context"

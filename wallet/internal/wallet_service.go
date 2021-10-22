@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"golang.org/x/net/context"
 	"task/pkg/repositories"
 	"task/wallet/api/proto/src"
@@ -19,7 +18,6 @@ func NewWalletService(walletRepo repositories.WalletRepository) *WalletService {
 
 func (ws WalletService) GetWallet(ctx context.Context, req *src.GetWalletRequest) (*src.GetWalletResponse, error) {
 	wallet, err := ws.walletRepo.GetWalletByPhoneNumber(req.PhoneNumber)
-	fmt.Println(err)
 	return &src.GetWalletResponse{
 		Id:          wallet.Id,
 		PhoneNumber: wallet.PhoneNumber,
