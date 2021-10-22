@@ -24,7 +24,6 @@ func main() {
 	mysqlConnection := pkg.NewMysql(dbOption)
 
 	walletRepo := repositories.NewWalletRepositoryImpl(mysqlConnection)
-	_ = walletRepo
 	mysqlConnection.DB.AutoMigrate(&models.Wallet{})
 
 	path := "0.0.0.0:3000"
@@ -34,7 +33,7 @@ func main() {
 	}
 	log.Printf("Listening on %s", path)
 	grpcServer := grpc.NewServer()
-	walletService := internal.NewWalletService()
+	walletService := internal.NewWalletService(walletRepo)
 	handler := proto.NewWalletHandlerImpl(walletService)
 	src.RegisterWalletServiceServer(grpcServer, handler)
 	grpcServer.Serve(lis)
