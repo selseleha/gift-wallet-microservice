@@ -17,7 +17,8 @@ func NewGiftService(giftRepo repositories.GiftRepository) *GiftService {
 }
 
 func (gs GiftService) GetGift(ctx context.Context, req *src.GetGiftRequest) (*src.GetGiftResponse, error) {
-	gift, err := gs.giftRepo.GetGift(req.PhoneNumber, req.Code)
+	gift, err := gs.giftRepo.GetGift(req.Code, req.PhoneNumber)
+
 	return &src.GetGiftResponse{
 		GiftId:        gift.Id,
 		TransactionId: "",

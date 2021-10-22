@@ -25,7 +25,7 @@ func main() {
 	giftRepo := repositories.NewGiftRepositoryImpl(mysqlConnection)
 	mysqlConnection.DB.AutoMigrate(&models.Gift{})
 
-	path := "0.0.0.0:3000"
+	path := "0.0.0.0:3001"
 	lis, err := net.Listen("tcp", path)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

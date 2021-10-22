@@ -1,8 +1,9 @@
 package models
 
 type Gift struct {
-	Id          int32  `gorm:"primary_key;AUTO_INCREMENT"`
-	PhoneNumber string `gorm:"not null"`
+	Id          int32 `gorm:"primary_key;AUTO_INCREMENT"`
+	PhoneNumber string
+	Code        string `gorm:"not null"`
 	Amount      int32
 }
 

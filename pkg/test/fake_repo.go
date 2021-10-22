@@ -58,7 +58,7 @@ func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType 
 	return errors.New("wallet not found")
 }
 
-func (r *FakeRepo) GetGift(phoneNumber string, code string) (*models.Gift, error) {
+func (r *FakeRepo) GetGift(code string, phoneNumber string) (*models.Gift, error) {
 	panic("impl me")
 }
 
