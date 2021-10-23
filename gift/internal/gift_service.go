@@ -21,7 +21,7 @@ func NewGiftService(giftRepo repositories.GiftRepository, walletClient walletSrc
 }
 
 func (gs GiftService) GetGift(ctx context.Context, req *src.GetGiftRequest) (*src.GetGiftResponse, error) {
-	gift, err := gs.giftRepo.GetGift(req.Code, req.PhoneNumber)
+	gift, transaction, err := gs.giftRepo.GetGift(req.Code, req.PhoneNumber)
 	if err != nil {
 		return &src.GetGiftResponse{}, err
 	}
@@ -33,7 +33,7 @@ func (gs GiftService) GetGift(ctx context.Context, req *src.GetGiftRequest) (*sr
 
 	return &src.GetGiftResponse{
 		GiftId:        gift.Id,
-		TransactionId: "",
+		TransactionId: transaction.Id,
 		Amount:        walletResponse.LastAmount,
 	}, err
 }

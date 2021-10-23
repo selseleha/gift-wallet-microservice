@@ -4,13 +4,16 @@ import (
 	"errors"
 	"math/rand"
 	"task/pkg/models"
+	"time"
 )
 
 type FakeRepo struct {
-	wallets     []models.Wallet
-	gifts       []models.Gift
-	walletIndex int32
-	giftIndex   int32
+	wallets          []models.Wallet
+	gifts            []models.Gift
+	transactions     []models.Transaction
+	walletIndex      int32
+	giftIndex        int32
+	transactionIndex int32
 }
 
 func (r *FakeRepo) GetWalletByPhoneNumber(phoneNumber string) (*models.Wallet, error) {
@@ -58,15 +61,23 @@ func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType 
 	return errors.New("wallet not found")
 }
 
-func (r *FakeRepo) GetGift(code string, phoneNumber string) (*models.Gift, error) {
+func (r *FakeRepo) GetGift(code string, phoneNumber string) (*models.Gift, *models.Transaction, error) {
 	for index, gift := range r.gifts {
 		if gift.Code == code && gift.PhoneNumber == nil {
 			updateGift := &r.gifts[index]
 			updateGift.PhoneNumber = &phoneNumber
-			return &gift, nil
+			transaction := models.Transaction{
+				Id:          rand.Int31(),
+				Amount:      gift.Amount,
+				Operation:   int32(models.Increases),
+				PhoneNumber: phoneNumber,
+				CreatedAt:   time.Now(),
+			}
+			r.transactions = append(r.transactions, transaction)
+			return &gift, &transaction, nil
 		}
 	}
-	return &models.Gift{}, errors.New("wallet not found")
+	return &models.Gift{}, &models.Transaction{}, errors.New("wallet not found")
 }
 
 func (r *FakeRepo) CreateGift(code string, amount int32, batchSize int32) error {
@@ -80,6 +91,21 @@ func (r *FakeRepo) CreateGift(code string, amount int32, batchSize int32) error 
 		r.giftIndex++
 		n++
 	}
+	return nil
+}
+
+func (r *FakeRepo) CreateTransaction(phoneNumber string, amount int32, operation int32) error {
+
+	transaction := models.Transaction{
+		Id:          rand.Int31(),
+		Amount:      amount,
+		Operation:   operation,
+		PhoneNumber: phoneNumber,
+		CreatedAt:   time.Now(),
+	}
+
+	r.transactions = append(r.transactions, transaction)
+	r.transactionIndex++
 	return nil
 }
 

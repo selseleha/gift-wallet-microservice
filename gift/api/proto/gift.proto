@@ -9,7 +9,7 @@ message GetGiftRequest{
 
 message GetGiftResponse{
   int32 giftId = 1;
-  string transactionId = 2;
+  int32 transactionId = 2;
   int32 amount = 3;
 }
 

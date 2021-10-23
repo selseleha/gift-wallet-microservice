@@ -24,7 +24,7 @@ func main() {
 	mysqlConnection := pkg.NewMysql(dbOption)
 
 	giftRepo := repositories.NewGiftRepositoryImpl(mysqlConnection)
-	mysqlConnection.DB.AutoMigrate(&models.Gift{})
+	mysqlConnection.DB.AutoMigrate(&models.Gift{}, &models.Transaction{})
 
 	path := "0.0.0.0:3001"
 	lis, err := net.Listen("tcp", path)
