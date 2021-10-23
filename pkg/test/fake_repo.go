@@ -94,19 +94,8 @@ func (r *FakeRepo) CreateGift(code string, amount int32, batchSize int32) error 
 	return nil
 }
 
-func (r *FakeRepo) CreateTransaction(phoneNumber string, amount int32, operation int32) error {
-
-	transaction := models.Transaction{
-		Id:          rand.Int31(),
-		Amount:      amount,
-		Operation:   operation,
-		PhoneNumber: phoneNumber,
-		CreatedAt:   time.Now(),
-	}
-
-	r.transactions = append(r.transactions, transaction)
-	r.transactionIndex++
-	return nil
+func (r *FakeRepo) GetTransactions() ([]models.Transaction, error) {
+	return r.transactions, nil
 }
 
 func NewFakeRepo() *FakeRepo {

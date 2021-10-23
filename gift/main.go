@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -24,8 +25,10 @@ func main() {
 	mysqlConnection := pkg.NewMysql(dbOption)
 
 	giftRepo := repositories.NewGiftRepositoryImpl(mysqlConnection)
+	transactionRepo := repositories.NewTransactionRepositoryImpl(mysqlConnection)
 	mysqlConnection.DB.AutoMigrate(&models.Gift{}, &models.Transaction{})
-
+	transactions, _ := transactionRepo.GetTransactions()
+	fmt.Println(transactions)
 	path := "0.0.0.0:3001"
 	lis, err := net.Listen("tcp", path)
 	if err != nil {

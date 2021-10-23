@@ -3,11 +3,10 @@ package repositories
 import (
 	"task/pkg"
 	"task/pkg/models"
-	"time"
 )
 
 type TransactionRepository interface {
-	CreateTransaction(phoneNumber string, amount int32, operation int32) error
+	GetTransactions() ([]models.Transaction, error)
 }
 
 type TransactionRepositoryImpl struct {
@@ -18,12 +17,10 @@ func NewTransactionRepositoryImpl(db *pkg.Database) *TransactionRepositoryImpl {
 	return &TransactionRepositoryImpl{db: db}
 }
 
-func (tr TransactionRepositoryImpl) CreateTransaction(phoneNumber string, amount int32, operation int32) error {
-	err := tr.db.DB.Create(&models.Transaction{
-		Amount:      amount,
-		Operation:   operation,
-		PhoneNumber: phoneNumber,
-		CreatedAt:   time.Now(),
-	}).Error
-	return err
+func (tr TransactionRepositoryImpl) GetTransactions() ([]models.Transaction, error) {
+	var transactions []models.Transaction
+	if err := tr.db.DB.Find(&transactions).Error; err != nil {
+		return nil, err
+	}
+	return transactions, nil
 }
