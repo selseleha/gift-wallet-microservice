@@ -1,10 +1,11 @@
 package test
 
 import (
-	"context"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/context"
 	"math/rand"
 	"task/pkg/models"
+	"task/pkg/utils"
 	"task/wallet/api/proto/src"
 	"task/wallet/internal"
 	"testing"
@@ -26,7 +27,7 @@ func TestWallet(t *testing.T) {
 	})
 
 	t.Run("test get wallet by wrong phone number", func(t *testing.T) {
-		_, err := walletService.GetWallet(ctx, &src.GetWalletRequest{PhoneNumber: randomPhoneNumber()})
+		_, err := walletService.GetWallet(ctx, &src.GetWalletRequest{PhoneNumber: utils.GenerateRandomPhoneNumber()})
 		assert.NotNil(t, err)
 	})
 
@@ -44,7 +45,7 @@ func TestWallet(t *testing.T) {
 	t.Run("test update wrong wallet", func(t *testing.T) {
 		amount := rand.Int31()
 		_, err := walletService.UpdateWallet(ctx, &src.UpdateWalletRequest{
-			PhoneNumber:   randomPhoneNumber(),
+			PhoneNumber:   utils.GenerateRandomPhoneNumber(),
 			Amount:        amount,
 			OperationType: 0,
 		})

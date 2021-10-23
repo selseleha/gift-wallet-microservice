@@ -38,18 +38,18 @@ func (r *FakeRepo) CreateWallet(phoneNumber string, amount int32) error {
 func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType int32) error {
 
 	if operationType == int32(models.Decreases) {
-		for i, wallet := range r.wallets {
+		for index, wallet := range r.wallets {
 			if wallet.PhoneNumber == phoneNumber {
-				updateRequest := &r.wallets[i]
+				updateRequest := &r.wallets[index]
 				updateRequest.Amount = wallet.Amount - amount
 				return nil
 			}
 		}
 	}
 	if operationType == int32(models.Increases) {
-		for i, wallet := range r.wallets {
+		for index, wallet := range r.wallets {
 			if wallet.PhoneNumber == phoneNumber {
-				updateRequest := &r.wallets[i]
+				updateRequest := &r.wallets[index]
 				updateRequest.Amount = wallet.Amount + amount
 				return nil
 			}
@@ -59,7 +59,28 @@ func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType 
 }
 
 func (r *FakeRepo) GetGift(code string, phoneNumber string) (*models.Gift, error) {
-	panic("impl me")
+	for index, gift := range r.gifts {
+		if gift.Code == code && gift.PhoneNumber == nil {
+			updateGift := &r.gifts[index]
+			updateGift.PhoneNumber = &phoneNumber
+			return &gift, nil
+		}
+	}
+	return &models.Gift{}, errors.New("wallet not found")
+}
+
+func (r *FakeRepo) CreateGift(code string, amount int32, batchSize int32) error {
+	var n int32 = 1
+	for n <= batchSize {
+		r.gifts = append(r.gifts, models.Gift{
+			Id:     int32(n),
+			Code:   code,
+			Amount: amount,
+		})
+		r.giftIndex++
+		n++
+	}
+	return nil
 }
 
 func NewFakeRepo() *FakeRepo {

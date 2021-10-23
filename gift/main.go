@@ -10,6 +10,7 @@ import (
 	"task/pkg"
 	"task/pkg/models"
 	"task/pkg/repositories"
+	walletSrc "task/wallet/api/proto/src"
 )
 
 func main() {
@@ -32,8 +33,13 @@ func main() {
 	}
 	log.Printf("Listening on %s", path)
 	grpcServer := grpc.NewServer()
-	giftService := internal.NewGiftService(giftRepo)
+	walletConn, err := grpc.Dial("0.0.0.0:3000", grpc.WithInsecure())
+	walletClient := walletSrc.NewWalletServiceClient(walletConn)
+
+	giftService := internal.NewGiftService(giftRepo, walletClient)
 	handler := api.NewGiftHandlerImpl(giftService)
 	src.RegisterGiftServiceServer(grpcServer, handler)
+
 	grpcServer.Serve(lis)
+
 }

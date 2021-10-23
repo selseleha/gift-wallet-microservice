@@ -13,8 +13,18 @@ message GetGiftResponse{
   int32 amount = 3;
 }
 
+message CreateGiftRequest{
+  int32 amount = 1;
+  string code = 2;
+  int32 batchSize = 3;
+}
+
+message CreateGiftResponse{
+
+}
 
 
 service GiftService {
   rpc GetGift(GetGiftRequest) returns (GetGiftResponse);
+  rpc CreateGift(CreateGiftRequest) returns (CreateGiftResponse);
 }

@@ -19,3 +19,7 @@ func NewGiftHandlerImpl(giftService *internal.GiftService) *GiftHandlerImpl {
 func (g GiftHandlerImpl) GetGift(ctx context.Context, req *src.GetGiftRequest) (*src.GetGiftResponse, error) {
 	return g.GiftService.GetGift(ctx, req)
 }
+
+func (g GiftHandlerImpl) CreateGift(ctx context.Context, req *src.CreateGiftRequest) (*src.CreateGiftResponse, error) {
+	return g.GiftService.CreateGift(ctx, req)
+}
