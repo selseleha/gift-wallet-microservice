@@ -23,7 +23,15 @@ message UpdateWalletResponse{
   int32 LastAmount = 2;
 }
 
+message CreateWalletRequest{
+  string phoneNumber = 1;
+}
+
+message CreateWalletResponse{
+}
+
 service WalletService {
   rpc GetWallet(GetWalletRequest) returns (GetWalletResponse);
   rpc UpdateWallet(UpdateWalletRequest) returns (UpdateWalletResponse);
+  rpc CreateWallet(CreateWalletRequest) returns (CreateWalletResponse);
 }

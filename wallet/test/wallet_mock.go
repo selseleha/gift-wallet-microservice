@@ -14,6 +14,10 @@ func (w WalletMockHandlerImpl) GetWallet(ctx context.Context, request *walletSrc
 	panic("implement me")
 }
 
+func (w WalletMockHandlerImpl) CreateWallet(ctx context.Context, request *walletSrc.CreateWalletRequest) (*walletSrc.CreateWalletResponse, error) {
+	panic("implement me")
+}
+
 func (w WalletMockHandlerImpl) UpdateWallet(ctx context.Context, request *walletSrc.UpdateWalletRequest) (*walletSrc.UpdateWalletResponse, error) {
 	return &walletSrc.UpdateWalletResponse{
 		TransactionId: "",
@@ -27,14 +31,8 @@ func NewWalletMockHandlerImpl() *WalletMockHandlerImpl {
 
 func StartWalletMock(address string) {
 	grpcServer := grpc.NewServer()
-	//var fakeRepo = test.NewFakeRepo()
-
-	//walletService := internal.NewWalletService(fakeRepo)
-	//handler := api.NewWalletHandlerImpl(walletService)
 	handler := NewWalletMockHandlerImpl()
-
 	walletSrc.RegisterWalletServiceServer(grpcServer, handler)
-
 	go start(grpcServer, address)
 }
 

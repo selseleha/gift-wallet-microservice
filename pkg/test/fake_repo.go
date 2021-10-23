@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math/rand"
 	"task/pkg/models"
+	"task/pkg/utils"
 	"time"
 )
 
@@ -77,7 +78,7 @@ func (r *FakeRepo) GetGift(code string, phoneNumber string) (*models.Gift, *mode
 			return &gift, &transaction, nil
 		}
 	}
-	return &models.Gift{}, &models.Transaction{}, errors.New("wallet not found")
+	return &models.Gift{}, &models.Transaction{}, utils.WalletNouFoundError
 }
 
 func (r *FakeRepo) CreateGift(code string, amount int32, batchSize int32) error {

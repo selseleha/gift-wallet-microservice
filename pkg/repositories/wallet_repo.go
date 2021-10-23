@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"task/pkg"
 	"task/pkg/models"
+	"task/pkg/utils"
 )
 
 type WalletRepository interface {
@@ -33,7 +34,15 @@ func (wr *WalletRepositoryImpl) GetWalletByPhoneNumber(phoneNumber string) (*mod
 }
 
 func (wr *WalletRepositoryImpl) CreateWallet(phoneNumber string, amount int32) error {
-	panic("used in fake repo")
+	wallet, _ := wr.GetWalletByPhoneNumber(phoneNumber)
+	if wallet.Id != 0 {
+		return utils.WalletExistError
+	}
+	err := wr.db.DB.Create(&models.Wallet{
+		PhoneNumber: phoneNumber,
+		Amount:      amount,
+	}).Error
+	return err
 }
 
 func (wr *WalletRepositoryImpl) UpdateWallet(phoneNumber string, amount int32, operationType int32) error {

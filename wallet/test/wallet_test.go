@@ -52,4 +52,15 @@ func TestWallet(t *testing.T) {
 		assert.NotNil(t, err)
 	})
 
+	t.Run("full test wallet after create wallet", func(t *testing.T) {
+		phoneNumber := utils.GenerateRandomPhoneNumber()
+		amount := rand.Int31()
+		walletService.CreateWallet(ctx, &src.CreateWalletRequest{PhoneNumber: phoneNumber})
+		wallet, _ := walletService.GetWallet(ctx, &src.GetWalletRequest{PhoneNumber: phoneNumber})
+		assert.Equal(t, phoneNumber, wallet.PhoneNumber)
+		assert.Equal(t, int32(0), wallet.Amount)
+		walletService.UpdateWallet(ctx, &src.UpdateWalletRequest{PhoneNumber: phoneNumber, Amount: amount})
+		updatedWallet, _ := walletService.GetWallet(ctx, &src.GetWalletRequest{PhoneNumber: phoneNumber})
+		assert.Equal(t, amount, updatedWallet.Amount)
+	})
 }

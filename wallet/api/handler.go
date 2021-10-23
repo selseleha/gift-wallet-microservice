@@ -21,7 +21,9 @@ func (w WalletHandlerImpl) GetWallet(ctx context.Context, req *src.GetWalletRequ
 }
 
 func (w WalletHandlerImpl) UpdateWallet(ctx context.Context, req *src.UpdateWalletRequest) (*src.UpdateWalletResponse, error) {
-
 	return w.WalletService.UpdateWallet(ctx, req)
+}
 
+func (w WalletHandlerImpl) CreateWallet(ctx context.Context, req *src.CreateWalletRequest) (*src.CreateWalletResponse, error) {
+	return w.WalletService.CreateWallet(ctx, req)
 }

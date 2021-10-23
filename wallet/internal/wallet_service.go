@@ -36,3 +36,8 @@ func (ws WalletService) UpdateWallet(ctx context.Context, req *src.UpdateWalletR
 		LastAmount:    wallet.Amount,
 	}, err
 }
+
+func (ws WalletService) CreateWallet(ctx context.Context, req *src.CreateWalletRequest) (*src.CreateWalletResponse, error) {
+	err := ws.walletRepo.CreateWallet(req.PhoneNumber, 0)
+	return &src.CreateWalletResponse{}, err
+}
