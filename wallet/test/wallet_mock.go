@@ -20,8 +20,7 @@ func (w WalletMockHandlerImpl) CreateWallet(ctx context.Context, request *wallet
 
 func (w WalletMockHandlerImpl) UpdateWallet(ctx context.Context, request *walletSrc.UpdateWalletRequest) (*walletSrc.UpdateWalletResponse, error) {
 	return &walletSrc.UpdateWalletResponse{
-		TransactionId: "",
-		LastAmount:    0,
+		LastAmount: 0,
 	}, nil
 }
 

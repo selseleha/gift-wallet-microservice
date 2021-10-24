@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
@@ -15,20 +16,33 @@ import (
 )
 
 func main() {
-	dbOption := pkg.Option{
+	redisOption := pkg.RedisOption{RedisURL: "127.0.0.1:6379"}
+	redisConn := pkg.NewRedis(&redisOption)
+
+	dbOption := pkg.DatabaseOption{
 		Host: "127.0.0.1",
 		Port: 3306,
 		User: "root",
 		Pass: "123456",
 		Db:   "discount",
 	}
-	mysqlConnection := pkg.NewMysql(dbOption)
+	mysqlConn := pkg.NewMysql(dbOption)
+	giftRepo := repositories.NewGiftRepositoryImpl(mysqlConn)
+	transactionRepo := repositories.NewTransactionRepositoryImpl(mysqlConn)
+	mysqlConn.DB.AutoMigrate(&models.Gift{}, &models.Transaction{})
+	transactions, err := transactionRepo.GetTransactions()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	giftRepo := repositories.NewGiftRepositoryImpl(mysqlConnection)
-	transactionRepo := repositories.NewTransactionRepositoryImpl(mysqlConnection)
-	mysqlConnection.DB.AutoMigrate(&models.Gift{}, &models.Transaction{})
-	transactions, _ := transactionRepo.GetTransactions()
-	fmt.Println(transactions)
+	for _, transaction := range transactions {
+		transactionJson, _ := json.Marshal(transaction)
+		err = redisConn.Set(fmt.Sprintf("transaction_%d", transaction.Id), string(transactionJson))
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
 	path := "0.0.0.0:3001"
 	lis, err := net.Listen("tcp", path)
 	if err != nil {
@@ -39,7 +53,7 @@ func main() {
 	walletConn, err := grpc.Dial("0.0.0.0:3000", grpc.WithInsecure())
 	walletClient := walletSrc.NewWalletServiceClient(walletConn)
 
-	giftService := internal.NewGiftService(giftRepo, walletClient)
+	giftService := internal.NewGiftService(giftRepo, walletClient, redisConn)
 	handler := api.NewGiftHandlerImpl(giftService)
 	src.RegisterGiftServiceServer(grpcServer, handler)
 

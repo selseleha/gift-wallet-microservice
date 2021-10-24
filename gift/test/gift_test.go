@@ -15,7 +15,7 @@ const sampleCode = "IR_BR"
 
 func TestGift(t *testing.T) {
 
-	giftService := internal.NewGiftService(fakeRepo, walletClient)
+	giftService := internal.NewGiftService(fakeRepo, walletClient, redisConn)
 	ctx := context.Background()
 	fakeRepo.CreateGift(sampleCode, sampleAmount, 100)
 	fakeRepo.CreateWallet(samplePhoneNumber, 0)
