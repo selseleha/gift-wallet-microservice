@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"gorm.io/gorm"
 	"task/pkg"
 	"task/pkg/models"
 	"task/pkg/utils"
@@ -9,7 +8,7 @@ import (
 
 type WalletRepository interface {
 	GetWalletByPhoneNumber(phoneNumber string) (*models.Wallet, error)
-	CreateWallet(phoneNumber string, amount int32) error
+	CreateWallet(phoneNumber string, amount int32) (*models.Wallet, error)
 	UpdateWallet(phoneNumber string, amount int32, operationType int32) error
 }
 
@@ -25,24 +24,35 @@ func (wr *WalletRepositoryImpl) GetWalletByPhoneNumber(phoneNumber string) (*mod
 	var wallet models.Wallet
 	if err := wr.db.DB.Table("wallet").Where("phone_number=?", phoneNumber).Find(&wallet).Error; err != nil {
 		return &models.Wallet{}, err
-
 	}
 	if wallet.Id == 0 {
-		return &models.Wallet{}, gorm.ErrRecordNotFound
+		wallet = models.Wallet{
+			PhoneNumber: phoneNumber,
+			Amount:      0,
+		}
+		createWallet, err := wr.CreateWallet(phoneNumber, 0)
+		if err != nil {
+			return &models.Wallet{}, err
+		}
+		return createWallet, nil
 	}
 	return &wallet, nil
 }
 
-func (wr *WalletRepositoryImpl) CreateWallet(phoneNumber string, amount int32) error {
-	wallet, _ := wr.GetWalletByPhoneNumber(phoneNumber)
-	if wallet.Id != 0 {
-		return utils.WalletExistError
+func (wr *WalletRepositoryImpl) CreateWallet(phoneNumber string, amount int32) (*models.Wallet, error) {
+	var wallet models.Wallet
+	if err := wr.db.DB.Table("wallet").Where("phone_number=?", phoneNumber).Find(&wallet).Error; err != nil {
+		return &models.Wallet{}, err
 	}
-	err := wr.db.DB.Create(&models.Wallet{
+	if wallet.Id != 0 {
+		return &wallet, utils.WalletExistError
+	}
+	createWallet := models.Wallet{
 		PhoneNumber: phoneNumber,
 		Amount:      amount,
-	}).Error
-	return err
+	}
+	err := wr.db.DB.Create(&createWallet).Error
+	return &createWallet, err
 }
 
 func (wr *WalletRepositoryImpl) UpdateWallet(phoneNumber string, amount int32, operationType int32) error {

@@ -19,8 +19,7 @@ message UpdateWalletRequest{
 }
 
 message UpdateWalletResponse{
-  string transactionId = 1;
-  int32 LastAmount = 2;
+  int32 LastAmount = 1;
 }
 
 message CreateWalletRequest{
@@ -28,6 +27,9 @@ message CreateWalletRequest{
 }
 
 message CreateWalletResponse{
+  int32 id = 1;
+  string phoneNumber = 2;
+  int32 amount = 3;
 }
 
 service WalletService {

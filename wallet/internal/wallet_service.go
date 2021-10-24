@@ -32,12 +32,15 @@ func (ws WalletService) UpdateWallet(ctx context.Context, req *src.UpdateWalletR
 	}
 	wallet, err := ws.walletRepo.GetWalletByPhoneNumber(req.PhoneNumber)
 	return &src.UpdateWalletResponse{
-		TransactionId: "",
-		LastAmount:    wallet.Amount,
+		LastAmount: wallet.Amount,
 	}, err
 }
 
 func (ws WalletService) CreateWallet(ctx context.Context, req *src.CreateWalletRequest) (*src.CreateWalletResponse, error) {
-	err := ws.walletRepo.CreateWallet(req.PhoneNumber, 0)
-	return &src.CreateWalletResponse{}, err
+	wallet, err := ws.walletRepo.CreateWallet(req.PhoneNumber, 0)
+	return &src.CreateWalletResponse{
+		Id:          wallet.Id,
+		PhoneNumber: wallet.PhoneNumber,
+		Amount:      wallet.Amount,
+	}, err
 }

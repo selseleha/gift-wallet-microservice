@@ -27,7 +27,7 @@ func (r *FakeRepo) GetWalletByPhoneNumber(phoneNumber string) (*models.Wallet, e
 	return &models.Wallet{}, errors.New("wallet not found")
 }
 
-func (r *FakeRepo) CreateWallet(phoneNumber string, amount int32) error {
+func (r *FakeRepo) CreateWallet(phoneNumber string, amount int32) (*models.Wallet, error) {
 	wallet := models.Wallet{
 		Id:          rand.Int31(),
 		PhoneNumber: phoneNumber,
@@ -36,7 +36,7 @@ func (r *FakeRepo) CreateWallet(phoneNumber string, amount int32) error {
 
 	r.wallets = append(r.wallets, wallet)
 	r.walletIndex++
-	return nil
+	return &wallet, nil
 }
 
 func (r *FakeRepo) UpdateWallet(phoneNumber string, amount int32, operationType int32) error {
