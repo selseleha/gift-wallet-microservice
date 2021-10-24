@@ -3,6 +3,8 @@ package pkg
 import (
 	"github.com/go-redis/redis"
 	"log"
+	"strconv"
+	"task/pkg/models"
 	"time"
 )
 
@@ -43,4 +45,22 @@ func (rs *RedisService) Get(key string) (interface{}, error) {
 		return nil, err
 	}
 	return val, nil
+}
+
+func (rs *RedisService) PublishTransaction(transaction models.Transaction) error {
+
+	err := rs.client.XAdd(&redis.XAddArgs{
+		Stream:       "transactions",
+		MaxLen:       0,
+		MaxLenApprox: 0,
+		ID:           "",
+		Values: map[string]interface{}{
+			"transactionId": strconv.Itoa(int(transaction.Id)),
+			"phoneNumber":   transaction.PhoneNumber,
+			"amount":        transaction.Amount,
+			"time":          transaction.CreatedAt.String(),
+		},
+	}).Err()
+
+	return err
 }

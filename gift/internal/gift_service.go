@@ -1,8 +1,6 @@
 package internal
 
 import (
-	"encoding/json"
-	"fmt"
 	"golang.org/x/net/context"
 	"task/gift/api/proto/src"
 	"task/pkg"
@@ -41,8 +39,10 @@ func (gs GiftService) GetGift(ctx context.Context, req *src.GetGiftRequest) (*sr
 		return &src.GetGiftResponse{}, err
 	}
 
-	transactionJson, _ := json.Marshal(transaction)
-	gs.redisService.Set(fmt.Sprintf("transaction_%d", transaction.Id), string(transactionJson))
+	//transactionJson, _ := json.Marshal(transaction)
+	//gs.redisService.Set(fmt.Sprintf("transaction_%d", transaction.Id), string(transactionJson))
+
+	gs.redisService.PublishTransaction(*transaction)
 
 	return &src.GetGiftResponse{
 		GiftId:        gift.Id,

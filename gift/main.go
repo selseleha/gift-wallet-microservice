@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -36,12 +34,10 @@ func main() {
 	}
 
 	for _, transaction := range transactions {
-		transactionJson, _ := json.Marshal(transaction)
-		err = redisConn.Set(fmt.Sprintf("transaction_%d", transaction.Id), string(transactionJson))
+		err = redisConn.PublishTransaction(transaction)
 		if err != nil {
 			log.Println(err)
 		}
-
 	}
 	path := "0.0.0.0:3001"
 	lis, err := net.Listen("tcp", path)
